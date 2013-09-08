@@ -1,6 +1,7 @@
 package com.mercuryirc.client.ui;
 
 import com.mercuryirc.client.Mercury;
+import com.mercuryirc.client.script.ScriptManager;
 import com.mercuryirc.client.ui.model.MessageRow;
 import com.mercuryirc.network.Connection;
 import javafx.beans.value.ChangeListener;
@@ -91,6 +92,7 @@ public class MessagePane extends VBox {
 
 	private void onLoad() {
 		pageLoaded = true;
+        webView.getEngine().executeScript(String.format("addRow('%s', '%s', '%s', '%s')", "Mercury", "Loaded " + ScriptManager.getInstance().getScripts().size() + " scripts.", TIME_FORMATTER.format(new Date()), MessageRow.Type.SELF.style()));
 		synchronized (loadQueue) {
 			for (MessageRow message : loadQueue) {
 				addRow(message);

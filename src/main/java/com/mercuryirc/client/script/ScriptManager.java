@@ -46,6 +46,10 @@ public class ScriptManager {
         }
     }
 
+    public ArrayList<ScriptDescriptor> getScripts() {
+        return scripts;
+    }
+
     public void register(ScriptDescriptor descriptor) {
         this.scripts.add(descriptor);
     }
