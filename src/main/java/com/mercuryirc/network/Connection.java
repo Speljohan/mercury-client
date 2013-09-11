@@ -1,5 +1,6 @@
 package com.mercuryirc.network;
 
+import com.mercuryirc.client.command.CommandManager;
 import com.mercuryirc.misc.IrcUtils;
 import com.mercuryirc.model.*;
 import com.mercuryirc.network.callback.Callback;
@@ -286,7 +287,7 @@ public class Connection implements Runnable {
 
 	public void process(Entity target, String input) {
 		if (input.startsWith("/")) {
-			input = input.substring(1);
+            input = input.substring(1);
 			String input2 = input.toLowerCase().trim();
 			final String[] tokens = input2.split(" ");
 			if (input2.startsWith("query") && tokens.length > 1) {
@@ -341,8 +342,10 @@ public class Connection implements Runnable {
 			} else {
 				if (input2.startsWith("ns identify ") || input2.startsWith("ns id ")) {
 					localUser.setNickservPassword(tokens[2]);
-				}
-				writeLine(input);
+                    writeLine(input);
+                } else {
+                    CommandManager.getInstance().handle(input);
+                }
 			}
 		} else {
 			if (target.getName().equalsIgnoreCase("nickserv") && input.toLowerCase().startsWith("identify")) {

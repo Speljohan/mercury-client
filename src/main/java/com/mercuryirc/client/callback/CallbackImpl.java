@@ -210,7 +210,6 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onUnknownCommand(final Connection connection, final String command) {
-        if (EventManager.getInstance().trigger("command", command)) return;
         Platform.runLater(new Runnable() {
 			@Override
 			public void run() {

@@ -3,6 +3,8 @@ require 'jruby'
 
 require_relative 'config_struct'
 
+java_import 'com.mercuryirc.client.command.CommandManager'
+java_import 'com.mercuryirc.client.command.RubyCommand'
 java_import 'com.mercuryirc.client.script.ScriptManager'
 java_import 'com.mercuryirc.client.script.EventManager'
 java_import 'com.mercuryirc.client.script.ScriptDescriptor'
@@ -18,6 +20,10 @@ end
 
 def on(what, &block)
   EventManager.getInstance.register(@config.id, what, false, &block)
+end
+
+def register_command(cmd, &block)
+  CommandManager.getInstance().register RubyCommand.new(cmd.to_s, &block)
 end
 
 def send_command(cmd, msg)
