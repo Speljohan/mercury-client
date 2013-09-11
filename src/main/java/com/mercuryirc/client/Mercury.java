@@ -33,7 +33,7 @@ public class Mercury extends Application {
 	public static final String WEBSITE = "https://github.com/zmansiv/mercury-client-java";
 
 	private static Stage stage;
-	private static ApplicationPane appPane;
+	public static ApplicationPane appPane;
 	private static CallbackImpl callback;
 	private static final List<Connection> connections = new LinkedList<>();
 

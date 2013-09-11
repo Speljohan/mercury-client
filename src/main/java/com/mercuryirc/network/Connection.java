@@ -179,6 +179,10 @@ public class Connection implements Runnable {
 		privmsg(message, false);
 	}
 
+    public void raw(String message) {
+        writeLine(message);
+    }
+
 	public void privmsg(Message message, boolean silent) {
 		writeLine("PRIVMSG " + message.getTarget().getName() + " :" + message.getMessage());
 		if (!silent) {

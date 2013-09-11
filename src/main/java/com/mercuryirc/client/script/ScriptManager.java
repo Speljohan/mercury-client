@@ -24,7 +24,7 @@ public class ScriptManager {
 
     private ArrayList<ScriptDescriptor> scripts;
 
-    private ScriptingContainer container;
+    public ScriptingContainer container;
 
     private FilenameFilter rubyFilter = new FilenameFilter() {
         @Override

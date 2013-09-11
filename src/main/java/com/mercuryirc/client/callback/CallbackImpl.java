@@ -2,6 +2,7 @@ package com.mercuryirc.client.callback;
 
 import com.mercuryirc.client.Mercury;
 import com.mercuryirc.client.misc.Tray;
+import com.mercuryirc.client.script.EventManager;
 import com.mercuryirc.client.ui.ApplicationPane;
 import com.mercuryirc.client.ui.Tab;
 import com.mercuryirc.client.ui.TabPane;
@@ -24,6 +25,7 @@ public class CallbackImpl implements Callback {
 	}
 
 	public void onConnect(final Connection connection) {
+        EventManager.getInstance().trigger("connect");
 		User local = connection.getLocalUser();
 		if (local.getNickservPassword() != null) {
 			connection.privmsg(new Message(local, connection.getServer().getUser("NickServ"), "identify " + local.getNickservPassword()), true);
@@ -41,6 +43,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onPrivmsg(final Connection connection, final Message message) {
+        EventManager.getInstance().trigger("privmsg", message.getSource());
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -57,6 +60,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onNotice(final Connection connection, final Message message) {
+        EventManager.getInstance().trigger("notice", message.getSource());
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -71,6 +75,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onCtcp(final Connection connection, final Message message) {
+        EventManager.getInstance().trigger("ctcp", message.getSource());
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -97,6 +102,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onJoin(final Connection connection, final Channel channel, final User user) {
+        EventManager.getInstance().trigger("join", channel.getName());
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -108,6 +114,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onPart(final Connection connection, final Channel channel, final User user, final String reason) {
+        EventManager.getInstance().trigger("part", channel.getName());
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -119,6 +126,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onQuit(final Connection connection, final User user, final String reason) {
+        EventManager.getInstance().trigger("quit");
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -134,6 +142,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onTopic(final Connection connection, final Channel channel, final User source, final String topic) {
+        EventManager.getInstance().trigger("topic", topic);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -146,6 +155,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onNick(final Connection connection, final User user, final String oldNick) {
+        EventManager.getInstance().trigger("nick", user, oldNick);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -165,6 +175,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onKick(final Connection connection, final Channel channel, final User user, final String reason) {
+        EventManager.getInstance().trigger("kick", channel, user, reason);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -176,6 +187,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onModeList(Connection connection, Channel channel, Mode.Type type, List<Mode> list) {
+        EventManager.getInstance().trigger("modelist", channel, type, list);
 		Message message = new Message(null, null, "Channel " + type.toString() + " list:");
 		appPane.getTabPane().addTargetedMessage(connection, message, MessageRow.Type.EVENT);
 		for (Mode mode : list) {
@@ -198,7 +210,8 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onUnknownCommand(final Connection connection, final String command) {
-		Platform.runLater(new Runnable() {
+        if (EventManager.getInstance().trigger("command", command)) return;
+        Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				Message message = new Message(null, null, "Unknown command: " + command);
@@ -209,6 +222,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onMode(final Connection connection, final Entity target, final Set<Mode> modes, final boolean add) {
+        EventManager.getInstance().trigger("mode", target, modes, add);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -226,6 +240,7 @@ public class CallbackImpl implements Callback {
 
 	@Override
 	public void onPrivmsgOut(final Connection connection, final Message message) {
+        EventManager.getInstance().trigger("privmsg_out", message);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {

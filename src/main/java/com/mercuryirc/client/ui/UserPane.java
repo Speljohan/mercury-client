@@ -6,10 +6,7 @@ import com.mercuryirc.model.Mode;
 import com.mercuryirc.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -145,7 +142,11 @@ public class UserPane extends VBox {
 					hbox.getChildren().add(spacer);
 				}
 			}
-			Label nickLabel = new Label();
+			final Label nickLabel = new Label();
+            final ContextMenu contextMenu = new ContextMenu(); // todo: this stuff
+            contextMenu.getItems().addAll(new MenuItem("Whois"), new MenuItem("Kick"), new MenuItem("Ban"));
+            nickLabel.setContextMenu(contextMenu);
+
 			nickLabel.setId("user-label");
 			nickLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
 			nickLabel.textProperty().bind(user.getNameProperty());
