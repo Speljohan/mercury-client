@@ -23,15 +23,17 @@ def on(what, &block)
 end
 
 def register_command(cmd, &block)
-  CommandManager.getInstance().register RubyCommand.new(cmd.to_s, &block)
+  CommandManager.getInstance().register RubyCommand.new("#{cmd.to_s}", &block)
+end
+
+def current_connection
+  Mercury.appPane.getTabPane.getSelected.getConnection
 end
 
 def send_command(cmd, msg)
-  connection = Mercury.appPane.getTabPane.getSelected.getConnection
-  connection.process(Mercury.appPane.getTabPane.getSelected.getEntity, "/#{cmd} #{msg}")
+  current_connection.process(Mercury.appPane.getTabPane.getSelected.getEntity, "/#{cmd} #{msg}")
 end
 
 def send_message(msg)
-  connection = Mercury.appPane.getTabPane.getSelected.getConnection
-  connection.process(Mercury.appPane.getTabPane.getSelected.getEntity, "#{msg}")
+  current_connection.process(Mercury.appPane.getTabPane.getSelected.getEntity, "#{msg}")
 end
